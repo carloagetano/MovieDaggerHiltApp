@@ -23,6 +23,11 @@ class MainActivityViewModel @Inject constructor(
     val movies: LiveData<Resource<ArrayList<MovieResponse>>>
         get() = _movies
 
+    private val _selectedMovie = MutableLiveData<MovieResponse>()
+
+    val selectedMovie: LiveData<MovieResponse>
+        get() = _selectedMovie
+
     init {
         getMovies()
     }
@@ -41,5 +46,9 @@ class MainActivityViewModel @Inject constructor(
 
             else -> Unit
         }
+    }
+
+    fun setSelectedMovie(movie: MovieResponse) {
+        _selectedMovie.postValue(movie)
     }
 }
