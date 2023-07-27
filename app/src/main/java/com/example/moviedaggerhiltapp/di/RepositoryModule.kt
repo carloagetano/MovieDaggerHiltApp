@@ -1,5 +1,6 @@
 package com.example.moviedaggerhiltapp.di
 
+import com.example.moviedaggerhiltapp.data.database.dao.MovieDao
 import com.example.moviedaggerhiltapp.data.repository.MovieRepository
 import com.example.moviedaggerhiltapp.data.repository.MovieRepositoryImpl
 import com.example.moviedaggerhiltapp.data.service.MovieAPIService
@@ -15,6 +16,6 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepository(movieAPIService: MovieAPIService): MovieRepository =
-        MovieRepositoryImpl(movieAPIService)
+    fun provideMovieRepository(movieAPIService: MovieAPIService, movieDao: MovieDao): MovieRepository =
+        MovieRepositoryImpl(movieAPIService, movieDao)
 }

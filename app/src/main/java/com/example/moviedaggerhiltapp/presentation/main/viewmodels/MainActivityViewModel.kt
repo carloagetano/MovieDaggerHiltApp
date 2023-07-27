@@ -1,5 +1,6 @@
 package com.example.moviedaggerhiltapp.presentation.main.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,6 +31,13 @@ class MainActivityViewModel @Inject constructor(
 
     init {
         getMovies()
+
+        viewModelScope.launch(dispatcher.io) {
+            Log.d(
+                "Movie Repository",
+                "${movieRepository.getAllMoviesWithPosters().hashCode()}"
+            )
+        }
     }
 
     private fun getMovies() = viewModelScope.launch(dispatcher.io) {
