@@ -19,15 +19,10 @@ class MoviesFragment : Fragment() {
     private lateinit var viewModel: MainActivityViewModel
     private lateinit var viewPagerAdapter: ViewPagerAdapter
 
-    private val pagesArray = arrayOf(
-        "Movies",
-        "Favorites"
-    )
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater,
@@ -42,6 +37,10 @@ class MoviesFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
 
+        setUpTabLayout()
+    }
+
+    private fun setUpTabLayout() {
         val viewPager = binding.viewPager
         val tabLayout = binding.tabLayout
 
@@ -49,8 +48,7 @@ class MoviesFragment : Fragment() {
         viewPager.adapter = viewPagerAdapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = pagesArray[position]
+            tab.text = resources.getStringArray(R.array.title_pages)[position]
         }.attach()
-
     }
 }

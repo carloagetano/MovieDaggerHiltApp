@@ -10,6 +10,9 @@
     <string name="plot_hint">Plot</string>
     <string name="add_movie_hint">Add Movie</string>
     <string name="hello_user">Hello,\nJohn Carlo</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="title_pages">
+        <item>"Movies"</item>
+        <item>"Favorites</item>
+    </string-array>
 </resources>

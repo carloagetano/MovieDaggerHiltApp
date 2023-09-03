@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviedaggerhiltapp.R
@@ -15,6 +18,7 @@ import com.example.moviedaggerhiltapp.data.utils.Resource
 import com.example.moviedaggerhiltapp.databinding.FragmentMoviesPageBinding
 import com.example.moviedaggerhiltapp.presentation.main.adapter.MovieAdapter
 import com.example.moviedaggerhiltapp.presentation.main.viewmodels.MainActivityViewModel
+import kotlinx.coroutines.launch
 
 class MoviesPageFragment : Fragment() {
 
@@ -62,6 +66,14 @@ class MoviesPageFragment : Fragment() {
 
                 is Resource.Loading -> {
                     showProgressBar()
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.getAllMoviesFromDb().collect { movieList ->
+                    //movieAdapter.differ.submitList(movieList)
                 }
             }
         }

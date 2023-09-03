@@ -1,6 +1,5 @@
 package com.example.moviedaggerhiltapp.data.repository
 
-import androidx.lifecycle.LiveData
 import com.example.moviedaggerhiltapp.data.database.dao.MovieDao
 import com.example.moviedaggerhiltapp.data.database.entity.MovieEntity
 import com.example.moviedaggerhiltapp.data.database.entity.PostersEntity
@@ -8,6 +7,8 @@ import com.example.moviedaggerhiltapp.data.database.relations.MovieWithPosters
 import com.example.moviedaggerhiltapp.data.models.MovieResponse
 import com.example.moviedaggerhiltapp.data.service.MovieAPIService
 import com.example.moviedaggerhiltapp.data.utils.Resource
+import kotlinx.coroutines.flow.Flow
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
@@ -25,7 +26,7 @@ class MovieRepositoryImpl @Inject constructor(
             } else {
                 Resource.Error(null, response.message())
             }
-        } catch (error: Exception) {
+        } catch (error: HttpException) {
             Resource.Error(null, error.message ?: "An error occurred")
         }
     }
@@ -45,7 +46,7 @@ class MovieRepositoryImpl @Inject constructor(
         movieDao.upsertMovieWithPosters(movieEntity = movieEntity, postersList = postersList)
     }
 
-    override fun getAllMoviesWithPosters(): LiveData<List<MovieWithPosters>> {
+    override fun getAllMoviesWithPosters(): Flow<List<MovieWithPosters>> {
         return movieDao.getAllMoviesWithPosters()
     }
 }

@@ -6,6 +6,7 @@ import com.example.moviedaggerhiltapp.data.database.entity.PostersEntity
 import com.example.moviedaggerhiltapp.data.database.relations.MovieWithPosters
 import com.example.moviedaggerhiltapp.data.models.MovieResponse
 import com.example.moviedaggerhiltapp.data.utils.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface MovieRepository {
 
@@ -20,5 +21,5 @@ interface MovieRepository {
         postersList: List<String>
     )
 
-    fun getAllMoviesWithPosters(): LiveData<List<MovieWithPosters>>
+    fun getAllMoviesWithPosters(): Flow<List<MovieWithPosters>>
 }
