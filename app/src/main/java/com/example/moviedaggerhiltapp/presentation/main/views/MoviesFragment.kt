@@ -4,29 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviedaggerhiltapp.R
-import com.example.moviedaggerhiltapp.data.utils.Resource
 import com.example.moviedaggerhiltapp.databinding.FragmentMoviesBinding
-import com.example.moviedaggerhiltapp.presentation.main.adapter.MovieAdapter
+import com.example.moviedaggerhiltapp.presentation.main.adapter.ViewPagerAdapter
 import com.example.moviedaggerhiltapp.presentation.main.viewmodels.MainActivityViewModel
-
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MoviesFragment : Fragment() {
 
     private lateinit var binding: FragmentMoviesBinding
     private lateinit var viewModel: MainActivityViewModel
-    private lateinit var movieAdapter: MovieAdapter
+    private lateinit var viewPagerAdapter: ViewPagerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater,
@@ -41,54 +37,18 @@ class MoviesFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
 
-        loadMovieAdapter()
-        subscribe()
-        onClickListeners()
+        setUpTabLayout()
     }
 
-    private fun subscribe() {
-        viewModel.movies.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Resource.Success -> {
-                    hideProgressBar()
-                    movieAdapter.differ.submitList(response.data?.toList())
-                }
+    private fun setUpTabLayout() {
+        val viewPager = binding.viewPager
+        val tabLayout = binding.tabLayout
 
-                is Resource.Error -> {
-                    hideProgressBar()
-                    Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()
-                }
+        viewPagerAdapter = ViewPagerAdapter(this)
+        viewPager.adapter = viewPagerAdapter
 
-                is Resource.Loading -> {
-                    showProgressBar()
-                }
-            }
-        }
-    }
-
-    private fun loadMovieAdapter() {
-        movieAdapter = MovieAdapter()
-
-        binding.movieRv.apply {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = movieAdapter
-        }
-    }
-
-    private fun onClickListeners() {
-        val action = MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment()
-        movieAdapter.setOnItemClickListener {
-            viewModel.setSelectedMovie(it)
-            findNavController().navigate(action)
-        }
-    }
-
-    private fun showProgressBar() {
-        binding.progressBar.visibility = View.VISIBLE
-    }
-
-    private fun hideProgressBar() {
-        binding.progressBar.visibility = View.GONE
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = resources.getStringArray(R.array.title_pages)[position]
+        }.attach()
     }
 }

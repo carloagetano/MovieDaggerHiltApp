@@ -4,11 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moviedaggerhiltapp.data.database.relations.MovieWithPosters
 import com.example.moviedaggerhiltapp.data.models.MovieResponse
 import com.example.moviedaggerhiltapp.data.repository.MovieRepository
 import com.example.moviedaggerhiltapp.data.utils.DispatcherProvider
 import com.example.moviedaggerhiltapp.data.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,6 +32,8 @@ class MainActivityViewModel @Inject constructor(
 
     init {
         getMovies()
+
+        getAllMoviesFromDb()
     }
 
     private fun getMovies() = viewModelScope.launch(dispatcher.io) {
@@ -51,4 +55,7 @@ class MainActivityViewModel @Inject constructor(
     fun setSelectedMovie(movie: MovieResponse) {
         _selectedMovie.postValue(movie)
     }
+
+    fun getAllMoviesFromDb(): Flow<List<MovieWithPosters>> =
+        movieRepository.getAllMoviesWithPosters()
 }

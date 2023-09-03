@@ -9,4 +9,10 @@
     <string name="movie_image_backdrop_hint">Movie Image Backdrop</string>
     <string name="plot_hint">Plot</string>
     <string name="add_movie_hint">Add Movie</string>
+    <string name="hello_user">Hello,\nJohn Carlo</string>
+
+    <string-array name="title_pages">
+        <item>"Movies"</item>
+        <item>"Favorites</item>
+    </string-array>
 </resources>

@@ -1,12 +1,19 @@
 package com.example.moviedaggerhiltapp.data.repository
 
+import com.example.moviedaggerhiltapp.data.database.dao.MovieDao
+import com.example.moviedaggerhiltapp.data.database.entity.MovieEntity
+import com.example.moviedaggerhiltapp.data.database.entity.PostersEntity
+import com.example.moviedaggerhiltapp.data.database.relations.MovieWithPosters
 import com.example.moviedaggerhiltapp.data.models.MovieResponse
 import com.example.moviedaggerhiltapp.data.service.MovieAPIService
 import com.example.moviedaggerhiltapp.data.utils.Resource
+import kotlinx.coroutines.flow.Flow
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
-    private val movieAPIService: MovieAPIService
+    private val movieAPIService: MovieAPIService,
+    private val movieDao: MovieDao
 ) : MovieRepository {
 
     override suspend fun getMovies(): Resource<ArrayList<MovieResponse>> {
@@ -19,8 +26,27 @@ class MovieRepositoryImpl @Inject constructor(
             } else {
                 Resource.Error(null, response.message())
             }
-        } catch (error: Exception) {
+        } catch (error: HttpException) {
             Resource.Error(null, error.message ?: "An error occurred")
         }
+    }
+
+    override suspend fun upsertMovie(movieEntity: MovieEntity): Long {
+        return movieDao.upsertMovie(movieEntity = movieEntity)
+    }
+
+    override suspend fun upsertPosters(postersEntity: List<PostersEntity>) {
+        movieDao.upsertPosters(postersEntity = postersEntity)
+    }
+
+    override suspend fun upsertMovieWithPosters(
+        movieEntity: MovieEntity,
+        postersList: List<String>
+    ) {
+        movieDao.upsertMovieWithPosters(movieEntity = movieEntity, postersList = postersList)
+    }
+
+    override fun getAllMoviesWithPosters(): Flow<List<MovieWithPosters>> {
+        return movieDao.getAllMoviesWithPosters()
     }
 }
